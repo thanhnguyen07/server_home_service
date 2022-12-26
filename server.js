@@ -28,7 +28,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-// Xây dựng một Schema, sử dụng ngôn ngữ Schema GraphQL
 const schema = buildSchema(`
   type Query {
     _id: String
