@@ -10,6 +10,8 @@ db.connect();
 
 app.use(morgan('combined'));
 
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 route(app);
 
 app.listen(port, () => {
