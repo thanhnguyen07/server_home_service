@@ -5,7 +5,9 @@ const db = require('./config/db');
 const port = 3000;
 const app = express();
 const route = require('./routes');
+const dotenv = require('dotenv');
 
+dotenv.config();
 db.connect();
 
 app.use(morgan('combined'));

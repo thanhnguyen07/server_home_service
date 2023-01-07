@@ -11,7 +11,7 @@ const User = new Schema(
     // listCmt: {type: Array, default: []},
     // listHistory: {type: Array, default: []},
   },
-  {timestamps: true},
+  {timestamps: true, versionKey: false},
 );
 
 module.exports = mongoose.model('User', User);
