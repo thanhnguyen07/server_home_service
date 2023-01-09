@@ -47,45 +47,28 @@ class UsersController {
     User.findOne({email: email, password: body.password}, (err, user) => {
       if (user) {
         const data = {userEmail: user.email};
-        const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: '30s',
+        const token = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: '1h',
         });
-        const resUser = {idUser: user._id, token: token};
-        if (body.password === dataUser.password) {
-          res.status(200).json({
-            resUser: resUser,
-            msg: 'Login Successfully',
-          });
-        }
+        const refreshToken = jwt.sign(
+          data,
+          process.env.ACCESS_REFRESH_TOKEN_SECRET,
+          {
+            expiresIn: '10 days',
+          },
+        );
+        const resUser = {
+          idUser: user._id,
+          token: token,
+          refreshToken: refreshToken,
+          msg: 'Login Successfully',
+        };
+        res.status(200).json({
+          ...resUser,
+        });
       } else {
-        res.status(500).json({msg: 'Incorrect account information'});
+        res.status(400).json({msg: 'Incorrect account information'});
       }
-      // if (user.length == 0) {
-      //   const user = new User(req.body);
-      //   user
-      //     .save()
-      //     .then(() => {
-      //       console.log(
-      //         '------------\nCreate User: ',
-      //         req.body.email,
-      //         '\n------------',
-      //       );
-      //       User.find({email: req.body.email}, (err, user) => {
-      //         res.status(200).json({
-      //           data: {idUser: user[0]._id},
-      //           msg: 'Sign Up Success',
-      //         });
-      //       });
-      //     })
-      //     .catch(() => {});
-      // } else {
-      //   console.log(
-      //     '------------\nEmail registered: ',
-      //     req.body.email,
-      //     '\n------------',
-      //   );
-      //   res.status(500).json({msg: 'Email registered'});
-      // }
     });
   }
 }
