@@ -6,15 +6,17 @@ dotenv.config();
 class UsersController {
   signUp(req, res) {
     const body = req.body;
-    const email = body.email.toLowerCase();
-    User.find({email: email}, (err, user) => {
-      if (user.length == 0) {
+    const email = req.body.email.toLowerCase();
+    User.findOne({email: email}, (err, user) => {
+      if (!user) {
         const newUser = {
           email: email,
           password: body.password,
+          fistName: body.fistName,
+          lastName: body.lastName,
         };
-        const user = new User(newUser);
-        user
+        const createUser = new User(newUser);
+        createUser
           .save()
           .then(() => {
             console.log(
@@ -22,9 +24,9 @@ class UsersController {
               body.email,
               '\n------------',
             );
-            User.find({email: email}, (err, user) => {
+            User.findOne({email: email}, (err, user) => {
               res.status(200).json({
-                data: {idUser: user[0]._id},
+                data: {idUser: user._id},
                 msg: 'Sign Up Success',
               });
             });

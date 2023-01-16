@@ -3,13 +3,10 @@ const {Schema} = mongoose;
 
 const User = new Schema(
   {
-    // name: {type: String},
+    fistName: {type: String},
+    lastName: {type: String},
     email: {type: String},
     password: {type: String},
-    // listLike: {type: Array, default: []},
-    // listPlay: {type: Array, default: []},
-    // listCmt: {type: Array, default: []},
-    // listHistory: {type: Array, default: []},
   },
   {timestamps: true, versionKey: false},
 );
