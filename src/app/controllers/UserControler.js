@@ -1,8 +1,9 @@
 const User = require('../models/User');
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const token = require('../../utils/token');
 
 dotenv.config();
+
 class UsersController {
   signUp(req, res) {
     const body = req.body;
@@ -19,15 +20,22 @@ class UsersController {
         createUser
           .save()
           .then(() => {
-            console.log(
-              '------------\nCreate User: ',
-              body.email,
-              '\n------------',
-            );
+            console.log('------------\nCreate User: ', email, '\n------------');
             User.findOne({email: email}, (err, user) => {
-              res.status(200).json({
-                data: {idUser: user._id},
+              const data = {userEmail: user.email};
+              const tokens = token.createToken(data);
+              const customeResUser = user.toObject();
+              delete customeResUser.password;
+              delete customeResUser.createdAt;
+              delete customeResUser.updatedAt;
+              const resUser = {
+                ...customeResUser,
+                token: tokens.token,
+                refreshToken: tokens.refreshToken,
                 msg: 'Sign Up Success',
+              };
+              res.status(200).json({
+                ...resUser,
               });
             });
           })
@@ -35,7 +43,7 @@ class UsersController {
       } else {
         console.log(
           '------------\nEmail registered: ',
-          body.email,
+          email,
           '\n------------',
         );
         res.status(500).json({msg: 'Email registered'});
@@ -49,20 +57,15 @@ class UsersController {
     User.findOne({email: email, password: body.password}, (err, user) => {
       if (user) {
         const data = {userEmail: user.email};
-        const token = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: '1h',
-        });
-        const refreshToken = jwt.sign(
-          data,
-          process.env.ACCESS_REFRESH_TOKEN_SECRET,
-          {
-            expiresIn: '10 days',
-          },
-        );
+        const tokens = token.createToken(data);
+        const customeResUser = user.toObject();
+        delete customeResUser.password;
+        delete customeResUser.createdAt;
+        delete customeResUser.updatedAt;
         const resUser = {
-          idUser: user._id,
-          token: token,
-          refreshToken: refreshToken,
+          ...customeResUser,
+          token: tokens.token,
+          refreshToken: tokens.refreshToken,
           msg: 'Login Successfully',
         };
         res.status(200).json({

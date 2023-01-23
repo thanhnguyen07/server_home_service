@@ -7,6 +7,7 @@ const User = new Schema(
     lastName: {type: String},
     email: {type: String},
     password: {type: String},
+    type: {type: String, default: null},
   },
   {timestamps: true, versionKey: false},
 );
