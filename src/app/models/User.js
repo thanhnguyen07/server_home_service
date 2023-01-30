@@ -3,11 +3,11 @@ const {Schema} = mongoose;
 
 const User = new Schema(
   {
-    fistName: {type: String},
+    firstName: {type: String},
     lastName: {type: String},
     email: {type: String},
     password: {type: String},
-    type: {type: String, default: null},
+    type: {type: String},
   },
   {timestamps: true, versionKey: false},
 );
