@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const Service = new Schema(
   {
     serviceName: {type: String},
-    image: {type: String},
+    imageEndPoint: {type: String},
   },
   {timestamps: true, versionKey: false},
 );
